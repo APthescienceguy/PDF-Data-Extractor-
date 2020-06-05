@@ -1,0 +1,28 @@
+import PyPDF2 as p2
+import pandas as pd
+
+
+PDFfile = open("IBDJan022020Preffstock.pdf", "rb")
+pdfread = p2.PdfFileReader(PDFfile)
+
+"""Extact Single Page"""
+x = pdfread.getPage(0)
+print(x.extractText())
+print(pdfread.getIsEncrypted())
+print(pdfread.getDocumentInfo())
+print(pdfread.getNumPages())
+
+"""Extract Entire PDF"""
+i = 0
+while i<pdfread.getNumPages():
+    pageinfo = pdfread.getPage(i)
+    print(pageinfo.extractText())
+    i = i + 1
+
+data = pd.DataFrame({'New York': ["AGMtgpfA","AGMtgpfB"]})
+
+datatoexcel = pd.ExcelWriter("FromPython.xlsx", engine= 'xlsxwriter')
+
+data.to_excel(datatoexcel, sheet_name= 'sheet1')
+
+datatoexcel.save()
